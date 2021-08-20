@@ -103,7 +103,8 @@ export default class VLCPlayerView extends Component {
       showLeftButton,
       showMiddleButton,
       showRightButton,
-      errorTitle
+      errorTitle,
+      onClick,
     } = this.props;
     let { isLoading, loadingSuccess, showControls, isError } = this.state;
     let showGG = false;
@@ -137,16 +138,17 @@ export default class VLCPlayerView extends Component {
         activeOpacity={1}
         style={[styles.videoBtn, style]}
         onPressOut={() => {
-          let currentTime = new Date().getTime();
-          if (this.touchTime === 0) {
-            this.touchTime = currentTime;
-            this.setState({ showControls: !this.state.showControls });
-          } else {
-            if (currentTime - this.touchTime >= 500) {
-              this.touchTime = currentTime;
-              this.setState({ showControls: !this.state.showControls });
-            }
-          }
+          // let currentTime = new Date().getTime();
+          // if (this.touchTime === 0) {
+          //   this.touchTime = currentTime;
+          //   this.setState({ showControls: !this.state.showControls });
+          // } else {
+          //   if (currentTime - this.touchTime >= 500) {
+          //     this.touchTime = currentTime;
+          //     this.setState({ showControls: !this.state.showControls });
+          //   }
+          // }
+          onClick && onClick();
         }}>
         <VLCPlayer
           ref={ref => (this.vlcPlayer = ref)}
@@ -189,81 +191,88 @@ export default class VLCPlayerView extends Component {
             </TouchableOpacity>
           </View>
         )}
-        <View style={styles.topView}>
-          <View style={styles.backBtn}>
-            {showBack && (
-              <TouchableOpacity
-                onPress={() => {
-                  if (isFull) {
-                    closeFullScreen && closeFullScreen();
-                  } else {
-                    onLeftPress && onLeftPress();
-                  }
-                }}
-                style={styles.btn}
-                activeOpacity={0.8}>
-                <Icon name={'chevron-left'} size={30} color="#fff" />
-              </TouchableOpacity>
-            )}
-            <View style={{ justifyContent: 'center', flex: 1, marginRight: 10 }}>
-              {showTitle &&
-                showControls && (
-                  <Text style={{ color: '#fff', fontSize: 16 }} numberOfLines={1}>
-                    {title}
-                  </Text>
-                )}
-            </View>
-            {showGG && (
-              <View style={styles.GG}>
-                <TimeLimt
-                  onEnd={() => {
-                    onEnd && onEnd();
-                  }}
-                //maxTime={Math.ceil(this.state.totalTime)}
-                />
+        {
+          // 不需要显示控制按钮
+          false && (
+            <>
+              <View style={styles.topView}>
+                <View style={styles.backBtn}>
+                  {showBack && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (isFull) {
+                          closeFullScreen && closeFullScreen();
+                        } else {
+                          onLeftPress && onLeftPress();
+                        }
+                      }}
+                      style={styles.btn}
+                      activeOpacity={0.8}>
+                      <Icon name={'chevron-left'} size={30} color="#fff" />
+                    </TouchableOpacity>
+                  )}
+                  <View style={{ justifyContent: 'center', flex: 1, marginRight: 10 }}>
+                    {showTitle &&
+                    showControls && (
+                      <Text style={{ color: '#fff', fontSize: 16 }} numberOfLines={1}>
+                        {title}
+                      </Text>
+                    )}
+                  </View>
+                  {showGG && (
+                    <View style={styles.GG}>
+                      <TimeLimt
+                        onEnd={() => {
+                          onEnd && onEnd();
+                        }}
+                        //maxTime={Math.ceil(this.state.totalTime)}
+                      />
+                    </View>
+                  )}
+                </View>
               </View>
-            )}
-          </View>
-        </View>
-        <View style={[styles.bottomView]}>
-          {showControls && (
-            <ControlBtn
-              //style={isFull?{width:deviceHeight}:{}}
-              showSlider={!isGG}
-              showGG={showGG}
-              onEnd={onEnd}
-              title={title}
-              onLeftPress={onLeftPress}
-              paused={this.state.paused}
-              isFull={isFull}
-              currentTime={this.state.currentTime}
-              totalTime={this.state.totalTime}
-              onPausedPress={this._play}
-              onFullPress={this._toFullScreen}
-              onValueChange={value => {
-                this.changingSlider = true;
-                this.setState({
-                  currentTime: value,
-                });
-              }}
-              onSlidingComplete={value => {
-                this.changingSlider = false;
-                if (Platform.OS === 'ios') {
-                  this.vlcPlayer.seek(Number((value / this.state.totalTime).toFixed(17)));
-                } else {
-                  this.vlcPlayer.seek(value);
-                }
-              }}
-              showGoLive={showGoLive}
-              onGoLivePress={onGoLivePress}
-              onReplayPress={onReplayPress}
-              titleGolive={titleGolive}
-              showLeftButton={showLeftButton}
-              showMiddleButton={showMiddleButton}
-              showRightButton={showRightButton}
-            />
-          )}
-        </View>
+              <View style={[styles.bottomView]}>
+                {showControls && (
+                  <ControlBtn
+                    //style={isFull?{width:deviceHeight}:{}}
+                    showSlider={!isGG}
+                    showGG={showGG}
+                    onEnd={onEnd}
+                    title={title}
+                    onLeftPress={onLeftPress}
+                    paused={this.state.paused}
+                    isFull={isFull}
+                    currentTime={this.state.currentTime}
+                    totalTime={this.state.totalTime}
+                    onPausedPress={this._play}
+                    onFullPress={this._toFullScreen}
+                    onValueChange={value => {
+                      this.changingSlider = true;
+                      this.setState({
+                        currentTime: value,
+                      });
+                    }}
+                    onSlidingComplete={value => {
+                      this.changingSlider = false;
+                      if (Platform.OS === 'ios') {
+                        this.vlcPlayer.seek(Number((value / this.state.totalTime).toFixed(17)));
+                      } else {
+                        this.vlcPlayer.seek(value);
+                      }
+                    }}
+                    showGoLive={showGoLive}
+                    onGoLivePress={onGoLivePress}
+                    onReplayPress={onReplayPress}
+                    titleGolive={titleGolive}
+                    showLeftButton={showLeftButton}
+                    showMiddleButton={showMiddleButton}
+                    showRightButton={showRightButton}
+                  />
+                )}
+              </View>
+            </>
+          )
+        }
       </TouchableOpacity>
     );
   }

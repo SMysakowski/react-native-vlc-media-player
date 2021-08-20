@@ -71,27 +71,12 @@ in root project select Build Settings ---> find Bitcode and select Enable Bitcod
 ## Use
 
 ```
-import { VLCPlayer, VlCPlayerView } from 'react-native-vlc-media-player';
-import Orientation from 'react-native-orientation';
-
-    <VLCPlayer
-        style={[styles.video]}
-        videoAspectRatio="16:9"
-        source={{ uri: "https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4"}}
-    />
-
-or you can use
+import { VlCPlayerView } from 'react-native-vlc-media-player';
 
     <VlCPlayerView
-          autoplay={false}
           url="https://www.radiantmediaplayer.com/media/big-buck-bunny-360p.mp4"
-          Orientation={Orientation}
-          ggUrl=""
-          showGG={true}
-          showTitle={true}
-          title="Big Buck Bunny"
-          showBack={true}
-          onLeftPress={()=>{}}
+          isFull={true}
+          onClick={() => {}}
        />
 ```
 
@@ -148,3 +133,8 @@ Video coding formats: Cinepak, Dirac, DV, H.263, H.264/MPEG-4 AVC, H.265/MPEG HE
 Huge thanks to "[smartlife - one of the best custom home automation companies in new zealand](https://www.smartlife.nz/)" for helping me to keep this repo maintained 
 
 Author - Roshan Milinda -> [roshan.digital](https://roshan.digital)
+
+
+## Fork
+I add a click event to <VlCPlayerView /> and delete control button.
+添加了video点击事件， 删除了控制按钮（因为不需要） 
